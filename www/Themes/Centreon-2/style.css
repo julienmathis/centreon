@@ -670,6 +670,7 @@ vertical-align: middle;
 
 .Resume_light_table th span {
     background-color: #00a499;
+    margin-right: 5px;
 }
 
 .Resume_light_table td span img{
@@ -1177,6 +1178,11 @@ a.infobulle:hover   {z-index:25;}
     text-align: center;
     border-radius: 4px;
     width: 30%;
+}
+
+.msg strong {
+    display: block;
+    font-size: 18px;
 }
 
 .msg-field {
