@@ -24,6 +24,7 @@ For CentOS 6.
 ::
 
    $ wget http://yum.centreon.com/standard/3.4/el6/stable/centreon-stable.repo -O /etc/yum.repos.d/centreon-stable.repo
+   $ wget http://yum.centreon.com/standard/3.4/el6/stable/RPM-GPG-KEY-CES -O /etc/pki/rpm-gpg/RPM-GPG-KEY-CES 
 
 
 For CentOS 7.
@@ -31,7 +32,7 @@ For CentOS 7.
 ::
 
    $ wget http://yum.centreon.com/standard/3.4/el7/stable/centreon-stable.repo -O /etc/yum.repos.d/centreon-stable.repo
-
+   $ wget http://yum.centreon.com/standard/3.4/el7/stable/RPM-GPG-KEY-CES -O /etc/pki/rpm-gpg/RPM-GPG-KEY-CES 
 
 The repository is now installed.
 
