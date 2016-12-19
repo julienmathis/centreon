@@ -111,9 +111,11 @@ class CentreonMetric extends CentreonWebService
         $query = "SELECT SQL_CALC_FOUND_ROWS m.metric_id, CONCAT(h.name,' - ', s.description, ' - ',  m.metric_name) AS fullname
                   FROM metrics m, hosts h, services s, index_data i
                   WHERE m.index_id = i.id
-                  AND   h.host_id = i.host_id
-                  AND   s.service_id = i.service_id
-                  AND   CONCAT(h.name,' - ', s.description, ' - ',  m.metric_name) LIKE '%". $q ."%'
+                  AND h.host_id = i.host_id
+                  AND s.service_id = i.service_id
+                  AND h.enabled = 1
+                  AND s.enabled = 1
+                  AND CONCAT(h.name,' - ', s.description, ' - ',  m.metric_name) LIKE '%". $q ."%'
                   ORDER BY CONCAT(h.name,' - ', s.description, ' - ',  m.metric_name) COLLATE utf8_general_ci "
             .$range;
         $DBRESULT = $this->pearDBMonitoring->query($query);
@@ -218,7 +220,6 @@ class CentreonMetric extends CentreonWebService
 
             $serviceData = $graph->getData($rows);
             
-            
             /* Replace NaN */
             for ($i = 0; $i < count($serviceData); $i++) {
                 if (isset($serviceData[$i]['data'])) {
@@ -257,7 +258,6 @@ class CentreonMetric extends CentreonWebService
                 'downtime' => $downtimes
             );
         }
-        
         return $result;
     }
 
@@ -344,7 +344,6 @@ class CentreonMetric extends CentreonWebService
             'acknowledge' => array(),
             'downtime' => array()
         );
-        
         return $result;
     }
 
@@ -459,8 +458,7 @@ class CentreonMetric extends CentreonWebService
                     }    
                 }
             }
-            
-            
+                
             $result[] = array(
                 'service_id' => $id,
                 'data' => array(
@@ -470,7 +468,6 @@ class CentreonMetric extends CentreonWebService
                 'size' => $rows
             );
         }
-        
         return $result;
     }
     
@@ -497,14 +494,14 @@ class CentreonMetric extends CentreonWebService
     protected function getAcknowlegePeriods($hostId, $serviceId, $start, $end)
     {
         $query = 'SELECT entry_time as start, deletion_time as end
-            FROM acknowledgements
-            WHERE host_id = ' . $hostId . ' AND service_id = ' . $serviceId . ' AND
-                (
-                    (entry_time <= ' . $end . ' AND ' . $end . ' <= deletion_time) OR
-                    (entry_time <= ' . $start . ' AND ' . $start . ' <= deletion_time) OR
-                    (entry_time >= ' . $start . ' AND ' . $end . ' >= deletion_time) OR
-                    (deletion_time IS NULL)
-                )';
+                    FROM acknowledgements
+                    WHERE host_id = ' . $hostId . ' AND service_id = ' . $serviceId . ' AND
+                    (
+                        (entry_time <= ' . $end . ' AND ' . $end . ' <= deletion_time) OR
+                        (entry_time <= ' . $start . ' AND ' . $start . ' <= deletion_time) OR
+                        (entry_time >= ' . $start . ' AND ' . $end . ' >= deletion_time) OR
+                        (deletion_time IS NULL)
+                    )';
         return $this->executeQueryPeriods($query, $start, $end);
     }
     
